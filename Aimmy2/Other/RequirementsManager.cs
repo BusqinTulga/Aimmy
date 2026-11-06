@@ -32,7 +32,7 @@ namespace Other
             object? value = Registry.GetValue(keyPath, valueName, null);
             if (value != null && Convert.ToInt32(value) == 1)
             {
-                LogManager.Log(LogManager.LogLevel.Warning, "Memory Integrity is enabled, please disable it to use Logitech Driver.", true, 7000);
+                LogManager.Log(LogManager.LogLevel.Warning, "内存完整性已启用，请将其关闭以使用罗技驱动。", true, 7000);
                 return false;
             }
             else return true;
@@ -52,7 +52,7 @@ namespace Other
                 string ghubfilepath = process.MainModule.FileName;
                 if (ghubfilepath == null)
                 {
-                    LogManager.Log(LogManager.LogLevel.Error, "An error occurred. Run as admin and try again.", true);
+                    LogManager.Log(LogManager.LogLevel.Error, "发生错误。请以管理员身份运行后重试。", true);
                     return false;
                 }
 
@@ -68,16 +68,16 @@ namespace Other
             }
             catch (AccessViolationException ex)
             {
-                LogManager.Log(LogManager.LogLevel.Error, $"An error occured: {ex.Message}\nRun as admin and try again.", true);
+                LogManager.Log(LogManager.LogLevel.Error, $"发生错误：{ex.Message}\n请以管理员身份运行后重试。", true);
                 return false;
             }
         }
 
         private static void ShowLGHubNotRunningMessage()
         {
-            if (MessageBox.Show("LG HUB is not running, is it installed?", "Aimmy - LG HUB Mouse Movement", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.No)
+            if (MessageBox.Show("LG HUB 未运行，是否已安装？", "Aimmy - LG HUB 鼠标移动", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.No)
             {
-                if (MessageBox.Show("Would you like to install it?", "Aimmy - LG HUB Mouse Movement", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show("是否要安装它？", "Aimmy - LG HUB 鼠标移动", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     new LGDownloader().Show();
                 }
@@ -86,7 +86,7 @@ namespace Other
 
         private static void ShowLGHubImproperInstallMessage()
         {
-            if (MessageBox.Show("LG HUB install is improper, would you like to install it?", "Aimmy - LG HUB Mouse Movement", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show("LG HUB 安装不完整，是否要重新安装？", "Aimmy - LG HUB 鼠标移动", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 new LGDownloader().Show();
             }

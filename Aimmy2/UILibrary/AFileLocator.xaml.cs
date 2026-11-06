@@ -1,5 +1,6 @@
 ﻿using Aimmy2.Class;
 using Microsoft.Win32;
+using Other;
 using System.IO;
 using UserControl = System.Windows.Controls.UserControl;
 
@@ -18,7 +19,7 @@ namespace UILibrary
         public AFileLocator(string title, string dictionary_path, string FileFilter = "All files (*.*)|*.*", string DLExtension = "")
         {
             InitializeComponent();
-            DropdownTitle.Content = title;
+            DropdownTitle.Content = Loc.T(title);
 
             main_dictionary_path = dictionary_path;
             FileLocationTextbox.Text = Dictionary.filelocationState[main_dictionary_path];

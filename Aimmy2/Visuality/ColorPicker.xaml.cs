@@ -1,4 +1,5 @@
 ﻿using Aimmy2.Theme;
+using Other;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -14,13 +15,13 @@ namespace UISections
         private Color ThemeGradientColor => ThemeManager.ThemeColorDark;
         private double currentGradientAngle = 0;
         //==
-        public string ColorPickerTitle { get; set; } = "Theme Color";
+        public string ColorPickerTitle { get; set; } = Loc.T("Theme Color");
         //--
         public ColorPicker(Color initialColor, string title = "Theme Color")
         {
             InitializeComponent();
             //--
-            ColorPickerTitle = title;
+            ColorPickerTitle = Loc.T(title);
             ColorWheelControl.Title = ColorPickerTitle;
             ColorWheelControl.SuppressThemeApply = true;
             //--

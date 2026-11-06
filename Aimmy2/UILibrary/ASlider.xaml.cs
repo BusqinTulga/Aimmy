@@ -1,4 +1,5 @@
 ﻿using Aimmy2.Theme;
+using Other;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -16,12 +17,12 @@ namespace Aimmy2.UILibrary
         {
             InitializeComponent();
 
-            _notifierText = NotifierText;
-            SliderTitle.Content = Text;
+            _notifierText = Loc.T(NotifierText);
+            SliderTitle.Content = Loc.T(Text);
 
             if (!string.IsNullOrEmpty(tooltip))
             {
-                var tt = new System.Windows.Controls.ToolTip { Content = tooltip };
+                var tt = new System.Windows.Controls.ToolTip { Content = Loc.T(tooltip) };
                 if (TryFindResource("Tooltip") is System.Windows.Style style)
                     tt.Style = style;
                 ToolTip = tt;

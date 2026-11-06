@@ -1,4 +1,6 @@
-﻿namespace Aimmy2.UILibrary
+﻿using Other;
+
+namespace Aimmy2.UILibrary
 {
     /// <summary>
     /// Interaction logic for AColorChanger.xaml
@@ -8,7 +10,7 @@
         public AColorChanger(string title)
         {
             InitializeComponent();
-            ColorChangerTitle.Content = title;
+            ColorChangerTitle.Content = Loc.T(title);
         }
     }
 }

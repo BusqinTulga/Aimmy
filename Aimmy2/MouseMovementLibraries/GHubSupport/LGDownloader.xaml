@@ -57,7 +57,7 @@
                            Padding="0,0,0,0"
                            FontSize="14"
                            FontFamily="Segoe MDL2 Assets" />
-                    <Label Content="LG Downloader"
+                    <Label Content="LG Hub 下载器"
                            HorizontalAlignment="Left"
                            Margin="38,0,0,0"
                            VerticalAlignment="Center"
@@ -81,7 +81,7 @@
                 </Grid>
                 <Grid x:Name="Grid1"
                       Margin="0,50,0,0">
-                    <Label Content="Please click on a button below to download LG Hub."
+                    <Label Content="请点击下方按钮下载 LG Hub。"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Top"
                            Foreground="#DDFFFFFF"
@@ -91,7 +91,7 @@
                            Margin="0,0,0,0" />
                     <StackPanel Margin="10,30,10,10">
                         <Button Tag="https://download01.logi.com/web/ftp/pub/techsupport/gaming/lghub_installer_2021.3.5164.exe"
-                                Content="LG Direct"
+                                Content="LG 官方直链"
                                 Background="#3F3C3C3C"
                                 BorderBrush="#3FFFFFFF"
                                 Foreground="White"
@@ -116,7 +116,7 @@
                                 FontSize="13.5"
                                 Click="DownloadFile" />
                         <Button Tag="https://raw.githubusercontent.com/DEVIX7/other_code/backup/backup/lghub_installer_2021.3.5164.exe.zip"
-                                Content="99'developer's GitHub"
+                                Content="99'developer 的 GitHub"
                                 Background="#3F3C3C3C"
                                 BorderBrush="#3FFFFFFF"
                                 Foreground="White"

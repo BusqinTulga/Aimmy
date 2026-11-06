@@ -644,7 +644,7 @@ namespace Aimmy2.Other
 
                 var reopenItem = new System.Windows.Controls.MenuItem
                 {
-                    Header = "↻ Reopen",
+                    Header = "↻ 重新打开",
                     Foreground = System.Windows.Media.Brushes.White,
                     Background = System.Windows.Media.Brushes.Transparent,
                     FontSize = 11,
@@ -655,7 +655,7 @@ namespace Aimmy2.Other
 
                 var exitItem = new System.Windows.Controls.MenuItem
                 {
-                    Header = "✕ Exit",
+                    Header = "✕ 退出",
                     Foreground = System.Windows.Media.Brushes.White,
                     Background = System.Windows.Media.Brushes.Transparent,
                     FontSize = 11,

@@ -1,5 +1,6 @@
 ﻿using Aimmy2.Theme;
 using AimmyWPF.Class;
+using Other;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -18,11 +19,11 @@ namespace Aimmy2.UILibrary
         public AToggle(string Text, string? tooltip = null)
         {
             InitializeComponent();
-            ToggleTitle.Content = Text;
+            ToggleTitle.Content = Loc.T(Text);
 
             if (!string.IsNullOrEmpty(tooltip))
             {
-                var tt = new System.Windows.Controls.ToolTip { Content = tooltip };
+                var tt = new System.Windows.Controls.ToolTip { Content = Loc.T(tooltip) };
                 if (TryFindResource("Tooltip") is Style style)
                     tt.Style = style;
                 ToolTip = tt;

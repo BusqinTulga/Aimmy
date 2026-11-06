@@ -167,7 +167,7 @@ namespace Aimmy2.Controls
                         {
                             Dictionary.toggleState["Aim Assist"] = false;
                             _mainWindow.UpdateToggleUI(t, false);
-                            LogManager.Log(LogManager.LogLevel.Warning, "Please load a model first", true);
+                            LogManager.Log(LogManager.LogLevel.Warning, "请先加载模型", true);
                         }
                     };
                 }, tooltip: "Turn aim assist on or off. You must load a model first.")
@@ -303,10 +303,10 @@ namespace Aimmy2.Controls
                         var value = s.Slider.Value;
                         if (value >= 0.98)
                             LogManager.Log(LogManager.LogLevel.Warning,
-                                "The Mouse Sensitivity you have set can cause Aimmy to be unable to aim, please decrease if you suffer from this problem", true);
+                                "你设置的鼠标灵敏度可能导致 Aimmy 无法瞄准，如遇此问题请降低数值", true);
                         else if (value <= 0.1)
                             LogManager.Log(LogManager.LogLevel.Warning,
-                                "The Mouse Sensitivity you have set can cause Aimmy to be unstable to aim, please increase if you suffer from this problem", true);
+                                "你设置的鼠标灵敏度可能导致 Aimmy 瞄准不稳定，如遇此问题请提高数值", true);
                     };
                 }, tooltip: "How fast the aim moves. Lower = faster and snappier, higher = slower and smoother.")
                 .AddSlider("Mouse Jitter", "Jitter", 1, 1, 0, 15, s => uiManager.S_MouseJitter = s,

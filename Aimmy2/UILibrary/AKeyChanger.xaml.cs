@@ -10,11 +10,11 @@ namespace Aimmy2.UILibrary
         public AKeyChanger(string Text, string Keybind, string? tooltip = null)
         {
             InitializeComponent();
-            KeyChangerTitle.Content = Text;
+            KeyChangerTitle.Content = Loc.T(Text);
 
             if (!string.IsNullOrEmpty(tooltip))
             {
-                var tt = new System.Windows.Controls.ToolTip { Content = tooltip };
+                var tt = new System.Windows.Controls.ToolTip { Content = Loc.T(tooltip) };
                 if (TryFindResource("Tooltip") is System.Windows.Style style)
                     tt.Style = style;
                 ToolTip = tt;

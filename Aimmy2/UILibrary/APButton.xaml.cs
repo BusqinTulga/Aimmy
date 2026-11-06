@@ -1,4 +1,6 @@
-﻿namespace Aimmy2.UILibrary
+﻿using Other;
+
+namespace Aimmy2.UILibrary
 {
     /// <summary>
     /// Interaction logic for APButton.xaml
@@ -8,12 +10,12 @@
         public APButton(string Text, string? tooltip = null, string iconGlyph = "\uE8B0")
         {
             InitializeComponent();
-            ButtonTitle.Content = Text;
+            ButtonTitle.Content = Loc.T(Text);
             IconLabel.Content = iconGlyph;
 
             if (!string.IsNullOrEmpty(tooltip))
             {
-                var tt = new System.Windows.Controls.ToolTip { Content = tooltip };
+                var tt = new System.Windows.Controls.ToolTip { Content = Loc.T(tooltip) };
                 if (TryFindResource("Tooltip") is System.Windows.Style style)
                     tt.Style = style;
                 ToolTip = tt;

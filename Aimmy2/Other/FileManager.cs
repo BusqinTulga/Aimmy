@@ -63,7 +63,7 @@ namespace Other
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error creating a required directory: {ex}");
+                MessageBox.Show($"创建所需目录时出错：{ex}");
                 Application.Current.Shutdown();
             }
         }
@@ -105,7 +105,7 @@ namespace Other
                 // Let the AI finish up
                 await Task.Delay(150);
 
-                DisposeManager(previousManager, "Previous model session did not stop cleanly");
+                DisposeManager(previousManager, "上一个模型会话未能正常停止");
                 AIManager = null;
 
                 manager = await CreateLoadedManagerAsync(modelPath);
@@ -117,7 +117,7 @@ namespace Other
                         MarkNoModelLoaded();
                     }
 
-                    LogManager.Log(LogManager.LogLevel.Error, $"Failed to load model: {selectedModel}", true, 5000);
+                    LogManager.Log(LogManager.LogLevel.Error, $"模型加载失败：{selectedModel}", true, 5000);
                     return;
                 }
 
@@ -126,21 +126,21 @@ namespace Other
                 manager = null;
                 Dictionary.lastLoadedModel = selectedModel;
 
-                string content = "Loaded Model: " + selectedModel;
+                string content = "已加载模型：" + selectedModel;
                 SelectedModelNotifier.Content = content;
                 LogManager.Log(LogManager.LogLevel.Info, content, true, 2000);
                 notifyModelLoaded = true;
             }
             catch (Exception ex)
             {
-                DisposeManager(manager, "Failed model session did not stop cleanly");
+                DisposeManager(manager, "失败的模型会话未能正常停止");
                 bool restored = await RestorePreviousModelAsync(previousModel);
                 if (!restored)
                 {
                     MarkNoModelLoaded();
                 }
 
-                LogManager.Log(LogManager.LogLevel.Error, $"Failed to load model: {selectedModel}. {ex.Message}", true, 5000);
+                LogManager.Log(LogManager.LogLevel.Error, $"模型加载失败：{selectedModel}。{ex.Message}", true, 5000);
             }
             finally
             {
@@ -162,7 +162,7 @@ namespace Other
                 }
                 catch (Exception ex)
                 {
-                    LogManager.Log(LogManager.LogLevel.Warning, $"Model loaded, but a load notification failed: {ex.Message}", true, 5000);
+                    LogManager.Log(LogManager.LogLevel.Warning, $"模型已加载，但加载通知失败：{ex.Message}", true, 5000);
                 }
             }
         }
@@ -195,7 +195,7 @@ namespace Other
             AIManager = restoredManager;
             Dictionary.lastLoadedModel = previousModel;
             RestoreModelSelection(previousModel);
-            SelectedModelNotifier.Content = $"Loaded Model: {previousModel}";
+            SelectedModelNotifier.Content = $"已加载模型：{previousModel}";
             return true;
         }
 
@@ -204,7 +204,7 @@ namespace Other
             AIManager = null;
             Dictionary.lastLoadedModel = "N/A";
             RestoreModelSelection("N/A");
-            SelectedModelNotifier.Content = "Loaded Model: N/A";
+            SelectedModelNotifier.Content = "已加载模型：N/A";
         }
 
         private static void DisposeManager(AIManager? manager, string warningPrefix)
@@ -242,7 +242,7 @@ namespace Other
             SaveDictionary.LoadJSON(Dictionary.sliderSettings, configPath);
             PropertyChanger.PostNewConfig(configPath, true);
 
-            SelectedConfigNotifier.Content = "Loaded Config: " + selectedConfig;
+            SelectedConfigNotifier.Content = "已加载配置：" + selectedConfig;
         }
 
         public void InitializeFileWatchers()
@@ -294,7 +294,7 @@ namespace Other
                     {
                         string? lastLoadedModel = Dictionary.lastLoadedModel;
                         if (lastLoadedModel != "N/A" && ModelListBox.Items.Contains(lastLoadedModel)) { ModelListBox.SelectedItem = lastLoadedModel; }
-                        SelectedModelNotifier.Content = $"Loaded Model: {lastLoadedModel}";
+                        SelectedModelNotifier.Content = $"已加载模型：{lastLoadedModel}";
                     }
                 });
             }
@@ -319,7 +319,7 @@ namespace Other
                         string? lastLoadedConfig = Dictionary.lastLoadedConfig;
                         if (lastLoadedConfig != "N/A" && ConfigListBox.Items.Contains(lastLoadedConfig)) { ConfigListBox.SelectedItem = lastLoadedConfig; }
 
-                        SelectedConfigNotifier.Content = "Loaded Config: " + lastLoadedConfig;
+                        SelectedConfigNotifier.Content = "已加载配置：" + lastLoadedConfig;
                     }
                 });
             }

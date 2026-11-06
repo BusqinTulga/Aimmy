@@ -95,7 +95,7 @@ namespace Aimmy2.AILogic
                     currentImageSize,
                     60,
                     false,
-                    "No stable sample captured. Try again after the model settles.",
+                    "未能采集到稳定样本，请等模型稳定后重试。",
                     "Balanced",
                     PerformanceRecommendationMode.Balanced);
 
@@ -107,7 +107,7 @@ namespace Aimmy2.AILogic
                     noStable,
                     noStable,
                     true,
-                    "No stable AI-loop sample was captured. Try again after the model settles.");
+                    "未能采集到稳定的 AI 循环样本，请等模型稳定后重试。");
             }
 
             PerformanceBenchmarkSizeResult bestThroughput = FindBestThroughput(validResults);
@@ -453,9 +453,9 @@ namespace Aimmy2.AILogic
             bool isFixedSizeModel)
         {
             if (isFixedSizeModel)
-                return "Fixed model locks image size. Higher FPS cap keeps detections as fresh as this model allows.";
+                return "固定模型会锁定图像尺寸，较高的 FPS 上限可在该模型允许范围内保持最新检测。";
 
-            return "Highest measured AI-loop speed. Uses more CPU/GPU than lower resource picks.";
+            return "测得的最高 AI 循环速度。相比低占用方案会使用更多 CPU/GPU。";
         }
 
         private static string DescribeQuality(
@@ -464,11 +464,11 @@ namespace Aimmy2.AILogic
             bool isFixedSizeModel)
         {
             if (isFixedSizeModel)
-                return "Fixed model locks image size. FPS cap cuts heat without changing detection detail.";
+                return "固定模型会锁定图像尺寸，限制 FPS 上限可降低发热，且不会改变检测细节。";
 
             return result.ImageSize == currentImageSize
-                ? "Best detail-first pair from measured FPS and load."
-                : "Higher image size keeps more detection detail, but costs more CPU/GPU.";
+                ? "根据实测 FPS 和负载得出的细节优先最佳组合。"
+                : "较高的图像尺寸能保留更多检测细节，但会占用更多 CPU/GPU。";
         }
 
         private static string DescribeBalanced(
@@ -478,14 +478,14 @@ namespace Aimmy2.AILogic
             bool isFixedSizeModel)
         {
             if (isFixedSizeModel)
-                return "Fixed model locks image size. FPS cap cuts heat without changing detection detail.";
+                return "固定模型会锁定图像尺寸，限制 FPS 上限可降低发热，且不会改变检测细节。";
 
             if (balanced.ImageSize < quality.ImageSize)
-                return "Keeps near-quality FPS with lower CPU/GPU load. Small or far targets can lose detail.";
+                return "在接近画质的 FPS 下降低 CPU/GPU 占用。但小而远的目标可能丢失细节。";
 
             return balanced.ImageSize < currentImageSize
-                ? "Lower image size cuts load while keeping measured FPS close."
-                : "Best all-around pair from measured FPS, image size, and load.";
+                ? "降低图像尺寸可减轻负载，同时实测 FPS 基本保持不变。"
+                : "根据实测 FPS、图像尺寸和负载得出的综合最佳组合。";
         }
 
         private static string DescribeHighSpeed(
@@ -494,11 +494,11 @@ namespace Aimmy2.AILogic
             bool isFixedSizeModel)
         {
             if (isFixedSizeModel)
-                return "Fixed model locks image size. FPS cap still cuts heat.";
+                return "固定模型会锁定图像尺寸，限制 FPS 上限仍可降低发热。";
 
             return highSpeed.ImageSize < quality.ImageSize
-                ? "Fastest/coolest practical pair. Detection detail can drop on small targets."
-                : "Lower sizes were slower here. Using the best measured speed pair.";
+                ? "兼顾速度与散热的最佳实用组合。小目标的检测细节可能下降。"
+                : "较低尺寸在此配置下反而更慢，因此采用实测速度最佳的组合。";
         }
 
         private static string DescribeLowestResources(
@@ -506,11 +506,11 @@ namespace Aimmy2.AILogic
             bool isFixedSizeModel)
         {
             if (isFixedSizeModel)
-                return "Fixed model locks image size. Lower FPS cap gives the game more GPU/CPU room.";
+                return "固定模型会锁定图像尺寸，较低的 FPS 上限可为游戏留出更多 GPU/CPU 资源。";
 
             return BuildFpsCap(lowestResources, PerformanceGoal.LowestResources) >= 60
-                ? "Targets lower GPU/CPU use while keeping detections at 60 FPS or better."
-                : "Hardware could not hold 60 FPS cheaply, so this keeps detections above the poor range when possible.";
+                ? "在保持 60 FPS 或更高检测频率的同时，尽量降低 GPU/CPU 占用。"
+                : "硬件无法低成本维持 60 FPS，因此在条件允许时尽量让检测频率高于较差水平。";
         }
 
         private static string BuildHardwareWarning(
@@ -519,18 +519,18 @@ namespace Aimmy2.AILogic
         {
             if (bestThroughput.AverageFps < LimitedHardwareAverageFps || BuildFpsCap(bestThroughput.AverageFps) < 30)
             {
-                return "Aimmy may feel inconsistent on this hardware. Try Lowest Resources, lower image size, or a lighter model.";
+                return "在此硬件上 Aimmy 可能表现不稳定。请尝试“最低占用”、降低图像尺寸或使用更轻量的模型。";
             }
 
             if (bestThroughput.AverageFps < 90 && validResults.All(HasHighLoad))
             {
-                return "CPU/GPU load is high across every tested size. Use Lowest Resources or a lighter model.";
+                return "所有测试尺寸下的 CPU/GPU 占用都很高。请使用“最低占用”或更轻量的模型。";
             }
 
             var smallest = validResults.OrderBy(result => result.ImageSize).First();
             if (bestThroughput.AverageFps < 120 && HasHighLoad(smallest))
             {
-                return "CPU/GPU load stayed high even at the smallest tested size. Use Lowest Resources or a lighter model.";
+                return "即使使用最小的测试尺寸，CPU/GPU 占用仍然很高。请使用“最低占用”或更轻量的模型。";
             }
 
             return string.Empty;

@@ -61,7 +61,7 @@ namespace AILogic
                 _consecutiveFailures = 0;
                 DisposeDxgiResources();
             }
-            LogManager.Log(LogLevel.Info, "Display change detected. DirectX resources will be reinitialized.");
+            LogManager.Log(LogLevel.Info, "检测到显示器变化，DirectX 资源将重新初始化。");
         }
 
         public void HandlePendingDisplayChanges()
@@ -92,7 +92,7 @@ namespace AILogic
                 var currentDisplay = DisplayManager.CurrentDisplay;
                 if (currentDisplay == null)
                 {
-                    LogManager.Log(LogLevel.Error, "No current display available. DisplayManager may not be initialized.");
+                    LogManager.Log(LogLevel.Error, "当前没有可用的显示器，DisplayManager 可能尚未初始化。");
                     throw new InvalidOperationException("No current display available. DisplayManager may not be initialized.");
                 }
 
@@ -105,7 +105,7 @@ namespace AILogic
                     factory.EnumAdapters1(adapterIndex, out var adapter).Success;
                     adapterIndex++)
                 {
-                    LogManager.Log(LogLevel.Info, $"Checking Adapter {adapterIndex}: {adapter.Description.Description.TrimEnd('\0')}");
+                    LogManager.Log(LogLevel.Info, $"正在检查适配器 {adapterIndex}：{adapter.Description.Description.TrimEnd('\0')}");
 
                     for (uint outputIndex = 0;
                         adapter.EnumOutputs(outputIndex, out var output).Success;
@@ -120,7 +120,7 @@ namespace AILogic
                                 outputDesc.DesktopCoordinates.Top,
                                 outputDesc.DesktopCoordinates.Right - outputDesc.DesktopCoordinates.Left,
                                 outputDesc.DesktopCoordinates.Bottom - outputDesc.DesktopCoordinates.Top);
-                            LogManager.Log(LogLevel.Info, $"Found Output {outputIndex}: DeviceName = '{outputDesc.DeviceName.TrimEnd('\0')}', Bounds = {outputBounds}");
+                            LogManager.Log(LogLevel.Info, $"找到输出 {outputIndex}：DeviceName = '{outputDesc.DeviceName.TrimEnd('\0')}'，Bounds = {outputBounds}");
 
                             // Try different matching strategies
                             bool nameMatch = currentDisplay?.DeviceName != null && outputDesc.DeviceName.TrimEnd('\0') == currentDisplay.DeviceName.TrimEnd('\0');
@@ -156,7 +156,7 @@ namespace AILogic
                         {
                             if (currentIndex == targetIndex)
                             {
-                                LogManager.Log(LogLevel.Warning, $"Could not match display by name or bounds. Found a fallback index, {targetIndex}.");
+                                LogManager.Log(LogLevel.Warning, $"无法按名称或边界匹配显示器，已找到备用索引 {targetIndex}。");
                                 targetOutput1 = output.QueryInterface<IDXGIOutput1>();
                                 targetAdapter = adapter;
                                 foundTarget = true;
@@ -174,7 +174,7 @@ namespace AILogic
 
                 if (targetAdapter == null || targetOutput1 == null)
                 {
-                    LogManager.Log(LogLevel.Error, "No suitable display output found for DirectX capture.", true, 6000);
+                    LogManager.Log(LogLevel.Error, "未找到适合 DirectX 捕获的显示器输出。", true, 6000);
                     throw new Exception("No suitable display output found");
                 }
 
@@ -210,7 +210,7 @@ namespace AILogic
 
                     if (result.Failure || _dxDevice == null)
                     {
-                        LogManager.Log(LogLevel.Error, $"Failed to create D3D11 device: {result}", true, 6000);
+                        LogManager.Log(LogLevel.Error, $"创建 D3D11 设备失败：{result}", true, 6000);
                         throw new Exception($"Failed to create D3D11 device: {result}");
                     }
                 }
@@ -219,22 +219,22 @@ namespace AILogic
                 _deskDuplication = targetOutput1.DuplicateOutput(_dxDevice);
                 _consecutiveFailures = 0; //reset on success
 
-                LogManager.Log(LogLevel.Info, "DirectX Desktop Duplication initialized successfully.");
+                LogManager.Log(LogLevel.Info, "DirectX Desktop Duplication 初始化成功。");
             }
             catch (SharpGenException ex) when (ex.ResultCode == Vortice.DXGI.ResultCode.Unsupported || ex.HResult == unchecked((int)0x887A0004))
             {
-                LogManager.Log(LogLevel.Error, $"DirectX Desktop Duplication not supported on this system: {ex.Message}", true, 6000);
+                LogManager.Log(LogLevel.Error, $"此系统不支持 DirectX Desktop Duplication：{ex.Message}", true, 6000);
                 _directXFailedPermanently = true;
                 DisposeDxgiResources();
 
                 AimSettings.ScreenCaptureMethod = "GDI+";
                 _currentCaptureMethod = "GDI+";
 
-                LogManager.Log(LogLevel.Error, "DirectX Desktop Duplication not supported on this system. Switched to GDI+ capture.", true, 6000);
+                LogManager.Log(LogLevel.Error, "此系统不支持 DirectX Desktop Duplication，已切换到 GDI+ 捕获。", true, 6000);
             }
             catch (Exception ex)
             {
-                LogManager.Log(LogLevel.Error, $"Failed to initialize DirectX Desktop Duplication: {ex.Message}", true, 6000);
+                LogManager.Log(LogLevel.Error, $"初始化 DirectX Desktop Duplication 失败：{ex.Message}", true, 6000);
                 DisposeDxgiResources();
                 throw;
             }
@@ -361,7 +361,7 @@ namespace AILogic
                     }
                     else
                     {
-                        LogManager.Log(LogLevel.Warning, "No visible region to copy from DirectX capture.", true, 3000);
+                        LogManager.Log(LogLevel.Warning, "DirectX 捕获没有可复制的可见区域。", true, 3000);
                         return GetCachedFrame(detectionBox, allowStaleCache);
                     }
 
@@ -427,7 +427,7 @@ namespace AILogic
             }
             catch (Exception e)
             {
-                LogManager.Log(LogLevel.Error, $"DirectX capture error: {e.Message}");
+                LogManager.Log(LogLevel.Error, $"DirectX 捕获错误：{e.Message}");
 
                 if (++_consecutiveFailures >= MAX_CONSECUTIVE_FAILURES)
                     lock (_displayLock) { _displayChangesPending = true; }
@@ -522,7 +522,7 @@ namespace AILogic
             }
             catch (Exception ex)
             {
-                LogManager.Log(LogLevel.Error, $"GDI+ screen capture failed: {ex.Message}");
+                LogManager.Log(LogLevel.Error, $"GDI+ 屏幕捕获失败：{ex.Message}");
                 throw;
             }
         }
@@ -608,7 +608,7 @@ namespace AILogic
                 }
                 catch (Exception ex)
                 {
-                    LogManager.Log(LogLevel.Error, $"Error disposing DXGI resources: {ex.Message}");
+                    LogManager.Log(LogLevel.Error, $"释放 DXGI 资源时出错：{ex.Message}");
                 }
             }
         }

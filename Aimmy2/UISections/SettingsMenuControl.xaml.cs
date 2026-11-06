@@ -164,7 +164,7 @@ namespace Aimmy2.Controls
                     var currentSize = Dictionary.dropdownState["Image Size"];
                     for (int i = 0; i < d.DropdownBox.Items.Count; i++)
                     {
-                        if ((d.DropdownBox.Items[i] as ComboBoxItem)?.Content?.ToString() == currentSize)
+                        if (MainWindow.GetDropdownItemValue(d.DropdownBox.Items[i] as ComboBoxItem) == currentSize)
                         {
                             d.DropdownBox.SelectedIndex = i;
                             break;
@@ -180,7 +180,7 @@ namespace Aimmy2.Controls
                         if (d.DropdownBox.SelectedItem == null || e.AddedItems.Count == 0)
                             return;
 
-                        var newSize = (d.DropdownBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
+                        var newSize = MainWindow.GetDropdownItemValue(d.DropdownBox.SelectedItem as ComboBoxItem);
                         if (string.IsNullOrEmpty(newSize))
                             return;
 
@@ -190,7 +190,7 @@ namespace Aimmy2.Controls
                 .AddSlider("AI FPS Limit", "FPS", 5, 5, 0, 240, s =>
                 {
                     uiManager.S_AIFpsLimit = s;
-                    s.SetValueFormatter(value => value <= 0 ? "Unlimited" : $"{value:F0} FPS");
+                    s.SetValueFormatter(value => value <= 0 ? "无限制" : $"{value:F0} FPS");
                 }, tooltip: "Caps the AI loop to reduce CPU/GPU load. 0 keeps Aimmy running at full speed.")
                 .AddButton("Run Performance Helper", b =>
                 {
@@ -210,9 +210,9 @@ namespace Aimmy2.Controls
                     {
                         var value = s.Slider.Value;
                         if (value >= 95)
-                            LogManager.Log(LogLevel.Warning, "The minimum confidence you have set for Aimmy to be too high and may be unable to detect players.", true);
+                            LogManager.Log(LogLevel.Warning, "你为 Aimmy 设置的最低置信度过高，可能导致无法检测到玩家。", true);
                         else if (value <= 35)
-                            LogManager.Log(LogLevel.Warning, "The minimum confidence you have set for Aimmy may be too low can cause false positives.", true);
+                            LogManager.Log(LogLevel.Warning, "你为 Aimmy 设置的最低置信度过低，可能导致误检。", true);
                     };
                 }, tooltip: "How sure the AI must be before targeting. Higher = fewer false detections but may miss targets.")
                 .AddToggle("Enable Model Switch Keybind", t => uiManager.T_EnableModelSwitchKeybind = t,
@@ -292,11 +292,11 @@ namespace Aimmy2.Controls
                 {
                     DisplayManager.RefreshDisplays();
                     uiManager.DisplaySelector.RefreshDisplays();
-                    LogManager.Log(LogLevel.Info, "Display list refreshed successfully.", true);
+                    LogManager.Log(LogLevel.Info, "显示器列表已刷新。", true);
                 }
                 catch (Exception ex)
                 {
-                    LogManager.Log(LogLevel.Error, $"Error refreshing displays: {ex.Message}", true);
+                    LogManager.Log(LogLevel.Error, $"刷新显示器时出错：{ex.Message}", true);
                 }
             };
             DisplaySelectMenu.Children.Insert(insertIndex + 1, refreshButton);
@@ -339,7 +339,7 @@ namespace Aimmy2.Controls
             {
                 try
                 {
-                    LogManager.Log(LogLevel.Info, $"AI focus switched to Display {e.DisplayIndex + 1} ({e.Bounds.Width}x{e.Bounds.Height})", true);
+                    LogManager.Log(LogLevel.Info, $"AI 焦点已切换到显示器 {e.DisplayIndex + 1}（{e.Bounds.Width}x{e.Bounds.Height}）", true);
                     UpdateDisplayRelatedSettings(e);
                 }
                 catch (Exception ex)
@@ -369,7 +369,7 @@ namespace Aimmy2.Controls
                 {
                     for (int i = 0; i < dropdown.DropdownBox.Items.Count; i++)
                     {
-                        if ((dropdown.DropdownBox.Items[i] as ComboBoxItem)?.Content?.ToString() == newSize)
+                        if (MainWindow.GetDropdownItemValue(dropdown.DropdownBox.Items[i] as ComboBoxItem) == newSize)
                         {
                             dropdown.DropdownBox.SelectedIndex = i;
                             break;
@@ -423,10 +423,10 @@ namespace Aimmy2.Controls
             dropdown.Visibility = visibility;
             _mainWindow!.uiManager.D_TargetClass!.Visibility = visibility;
 
-            string? selection = (dropdown.DropdownBox.SelectedItem as ComboBoxItem)?.Content?.ToString();
+            string? selection = MainWindow.GetDropdownItemValue(dropdown.DropdownBox.SelectedItem as ComboBoxItem);
 
             var removedItems = dropdown.DropdownBox.Items.Cast<ComboBoxItem>()
-                .Where(item => item.Content?.ToString() != "Best Confidence")
+                .Where(item => MainWindow.GetDropdownItemValue(item) != "Best Confidence")
                 .ToList();
 
             foreach (var item in removedItems)
@@ -445,7 +445,7 @@ namespace Aimmy2.Controls
             {
                 for (int i = 0; i < dropdown.DropdownBox.Items.Count; i++)
                 {
-                    if ((dropdown.DropdownBox.Items[i] as ComboBoxItem)?.Content?.ToString() == selection)
+                    if (MainWindow.GetDropdownItemValue(dropdown.DropdownBox.Items[i] as ComboBoxItem) == selection)
                     {
                         dropdown.DropdownBox.SelectedIndex = i;
                         return;

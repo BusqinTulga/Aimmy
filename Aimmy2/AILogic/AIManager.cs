@@ -242,7 +242,7 @@ namespace Aimmy2.AILogic
                 }
                 catch (Exception ex)
                 {
-                    Log(LogLevel.Error, $"Error starting the model via DirectML: {ex.Message}\n\nFalling back to CPU, performance may be poor.", true);
+                    Log(LogLevel.Error, $"无法通过 DirectML 启动模型：{ex.Message}\n\n正在回退到 CPU，性能可能较差。", true);
 
                     try
                     {
@@ -252,7 +252,7 @@ namespace Aimmy2.AILogic
                     }
                     catch (Exception e)
                     {
-                        Log(LogLevel.Error, $"Error starting the model via CPU: {e.Message}, you won't be able to aim assist at all.", true);
+                        Log(LogLevel.Error, $"无法通过 CPU 启动模型：{e.Message}，你将完全无法使用瞄准辅助。", true);
                         return false;
                     }
                 }
@@ -309,8 +309,8 @@ namespace Aimmy2.AILogic
                 var inputMetadata = _onnxModel.InputMetadata;
                 var outputMetadata = _onnxModel.OutputMetadata;
 
-                Log(LogLevel.Info, "=== Model Metadata ===");
-                Log(LogLevel.Info, "Input Metadata:");
+                Log(LogLevel.Info, "=== 模型元数据 ===");
+                Log(LogLevel.Info, "输入元数据：");
 
                 bool isDynamic = false;
                 int fixedInputSize = 0;
@@ -318,7 +318,7 @@ namespace Aimmy2.AILogic
                 foreach (var kvp in inputMetadata)
                 {
                     string dimensionsStr = string.Join("x", kvp.Value.Dimensions);
-                    Log(LogLevel.Info, $"  Name: {kvp.Key}, Dimensions: {dimensionsStr}");
+                    Log(LogLevel.Info, $"  名称：{kvp.Key}，维度：{dimensionsStr}");
 
                     // Check if model is dynamic (dimensions are -1)
                     if (kvp.Value.Dimensions.Any(d => d == -1))
@@ -332,11 +332,11 @@ namespace Aimmy2.AILogic
                     }
                 }
 
-                Log(LogLevel.Info, "Output Metadata:");
+                Log(LogLevel.Info, "输出元数据：");
                 foreach (var kvp in outputMetadata)
                 {
                     string dimensionsStr = string.Join("x", kvp.Value.Dimensions);
-                    Log(LogLevel.Info, $"  Name: {kvp.Key}, Dimensions: {dimensionsStr}");
+                    Log(LogLevel.Info, $"  名称：{kvp.Key}，维度：{dimensionsStr}");
                 }
 
                 IsDynamicModel = isDynamic;
@@ -348,7 +348,7 @@ namespace Aimmy2.AILogic
                     NUM_DETECTIONS = CalculateNumDetections(IMAGE_SIZE);
                     LoadClasses();
                     ImageSizeUpdated?.Invoke(IMAGE_SIZE);
-                    Log(LogLevel.Info, $"Loaded dynamic model - using selected image size {IMAGE_SIZE}x{IMAGE_SIZE} with {NUM_DETECTIONS} detections", true, 3000);
+                    Log(LogLevel.Info, $"已加载动态模型：使用所选图像尺寸 {IMAGE_SIZE}x{IMAGE_SIZE}，检测数 {NUM_DETECTIONS}", true, 3000);
                 }
                 else
                 {
@@ -362,7 +362,7 @@ namespace Aimmy2.AILogic
                     if (!supportedSizes.Contains(fixedSizeStr))
                     {
                         Log(LogLevel.Error,
-                            $"Model requires unsupported size {fixedInputSize}x{fixedInputSize}. Supported sizes are: {string.Join(", ", supportedSizes)}",
+                            $"模型需要不受支持的尺寸 {fixedInputSize}x{fixedInputSize}。支持的尺寸：{string.Join(", ", supportedSizes)}",
                             true, 10000);
                         return false;
                     }
@@ -375,7 +375,7 @@ namespace Aimmy2.AILogic
                     {
                         // Auto-adjust the image size to match the model
                         Log(LogLevel.Warning,
-                            $"Fixed-size model expects {fixedInputSize}x{fixedInputSize}. Automatically adjusting Image Size setting.",
+                            $"固定尺寸模型需要 {fixedInputSize}x{fixedInputSize}。正在自动调整图像尺寸设置。",
                             true, 3000);
 
                         AimSettings.ImageSize = fixedInputSize;
@@ -404,12 +404,12 @@ namespace Aimmy2.AILogic
                     if (!outputMetadata.Values.All(metadata => metadata.Dimensions.SequenceEqual(expectedShape)))
                     {
                         Log(LogLevel.Error,
-                            $"Output shape does not match the expected shape of {string.Join("x", expectedShape)}.\nThis model will not work with Aimmy, please use an YOLOv8 model converted to ONNXv8.",
+                            $"输出形状与预期形状 {string.Join("x", expectedShape)} 不匹配。\n此模型无法与 Aimmy 配合使用，请使用转换为 ONNXv8 的 YOLOv8 模型。",
                             true, 10000);
                         return false;
                     }
 
-                    Log(LogLevel.Info, $"Loaded fixed-size model: {fixedInputSize}x{fixedInputSize}", true, 2000);
+                    Log(LogLevel.Info, $"已加载固定尺寸模型：{fixedInputSize}x{fixedInputSize}", true, 2000);
                 }
 
                 // Notify UI about dynamic model status
@@ -446,22 +446,22 @@ namespace Aimmy2.AILogic
                             }
                         }
                         NUM_CLASSES = _modelClasses.Count > 0 ? _modelClasses.Keys.Max() + 1 : 1;
-                        Log(LogLevel.Info, $"Loaded {_modelClasses.Count} class(es) from model metadata: {data.ToString(Newtonsoft.Json.Formatting.None)}", false);
+                        Log(LogLevel.Info, $"从模型元数据加载了 {_modelClasses.Count} 个类别：{data.ToString(Newtonsoft.Json.Formatting.None)}", false);
                     }
                     else
                     {
-                        Log(LogLevel.Error, "Model metadata 'names' field is not a valid JSON object.", true);
+                        Log(LogLevel.Error, "模型元数据中的“names”字段不是有效的 JSON 对象。", true);
                     }
                 }
                 else
                 {
-                    Log(LogLevel.Error, "Model metadata does not contain 'names' field for classes.", true);
+                    Log(LogLevel.Error, "模型元数据不包含用于类别的“names”字段。", true);
                 }
                 ClassesUpdated?.Invoke(new Dictionary<int, string>(_modelClasses));
             }
             catch (Exception ex)
             {
-                Log(LogLevel.Error, $"Error loading classes: {ex.Message}", true);
+                Log(LogLevel.Error, $"加载类别时出错：{ex.Message}", true);
             }
         }
 
@@ -594,7 +594,7 @@ namespace Aimmy2.AILogic
             }
             catch (Exception ex)
             {
-                Log(LogLevel.Error, $"AI loop stopped: {ex.Message}", true, 5000);
+                Log(LogLevel.Error, $"AI 循环已停止：{ex.Message}", true, 5000);
             }
         }
 
@@ -993,7 +993,7 @@ namespace Aimmy2.AILogic
 
                 if (outputTensor == null)
                 {
-                    Log(LogLevel.Error, "Model inference returned null output tensor.", true, 2000);
+                    Log(LogLevel.Error, "模型推理返回了空的输出张量。", true, 2000);
                     SaveFrame(frame);
                     return null;
                 }
@@ -1231,7 +1231,7 @@ namespace Aimmy2.AILogic
                 catch (Exception ex)
                 {
                     restoreException = ex;
-                    Log(LogLevel.Error, $"Performance helper could not restore the model session: {ex.Message}", true, 5000);
+                    Log(LogLevel.Error, $"性能助手无法恢复模型会话：{ex.Message}", true, 5000);
                 }
                 finally
                 {
@@ -1561,7 +1561,7 @@ namespace Aimmy2.AILogic
             }
             catch (Exception ex)
             {
-                Log(LogLevel.Error, $"SaveFrame failed: {ex.Message}");
+                Log(LogLevel.Error, $"保存帧失败：{ex.Message}");
             }
         }
 
@@ -1579,7 +1579,7 @@ namespace Aimmy2.AILogic
                 Task? loopTask = _aiLoopTask;
                 if (loopTask != null && !loopTask.Wait(TimeSpan.FromSeconds(5)))
                 {
-                    Log(LogLevel.Warning, "AI loop is still stopping; waiting before disposing model resources.");
+                    Log(LogLevel.Warning, "AI 循环仍在停止中，正在等待后再释放模型资源。");
                     loopTask.Wait();
                 }
             }
@@ -1588,7 +1588,7 @@ namespace Aimmy2.AILogic
             }
             catch (Exception ex)
             {
-                Log(LogLevel.Warning, $"AI loop did not stop cleanly: {ex.Message}");
+                Log(LogLevel.Warning, $"AI 循环未能正常停止：{ex.Message}");
             }
             finally
             {

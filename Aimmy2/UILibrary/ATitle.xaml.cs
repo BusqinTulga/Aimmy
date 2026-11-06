@@ -1,4 +1,5 @@
 ﻿using Aimmy2.Class;
+using Other;
 
 namespace Aimmy2.UILibrary
 {
@@ -11,7 +12,8 @@ namespace Aimmy2.UILibrary
         {
             InitializeComponent();
 
-            LabelTitle.Content = Text;
+            // 显示文本使用中文，内部状态键仍使用原始英文名称
+            LabelTitle.Content = Loc.T(Text);
 
             if (MinimizableMenu)
             {
